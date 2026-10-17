@@ -534,8 +534,17 @@ export default function Dashboard() {
   };
 
   const handleSaveVerificationLog = (logEntry) => {
-    setVerificationHistory(prev => [logEntry, ...prev]);
-    triggerPointsAward(15, `Medicine Verified: ${logEntry.name} (${logEntry.brand || 'Scanned Label'})`);
+    const now = new Date(Date.now() + virtualTimeOffset);
+    const dateStr = now.toLocaleDateString([], { month: '2-digit', day: '2-digit', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const completeEntry = {
+      id: logEntry.id || Date.now() + Math.random(),
+      date: logEntry.date || dateStr,
+      time: logEntry.time || timeStr,
+      ...logEntry
+    };
+    setVerificationHistory(prev => [completeEntry, ...prev]);
+    triggerPointsAward(15, `Medicine Verified: ${completeEntry.name} (${completeEntry.brand || 'Scanned Label'})`);
   };
 
   // Update profile patient info
